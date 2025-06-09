@@ -104,7 +104,7 @@ def decrypt():   #decrypt function
         else:  #if decrption_key does not surpass the list len the we proceed 
             decrypt_letter_index = ((letter_index - decryption_key))
             decrypted_word+=letters_list[decrypt_letter_index]
-    return f'decrypted word is $$$$$$$$    {decrypted_word}   $$$$$$$$$$$$'  #returnS the decrypted word
+    return f'decrypted word is $$$$$$$$    {decrypted_word}   $$$$$$$$$$$$'  #returnS the decrypted word-
 
 option = True  #option set to true initialising the while loop
 
