@@ -1,4 +1,5 @@
 # Number Guessing Game
+
 """
 This script implements an interactive number guessing game.
 
@@ -36,7 +37,16 @@ Note:
 - Input validation is minimal; entering non-integer values for guesses will cause an error.
 - The random number is printed at the start for debugging purposes; remove or comment out the print statement for a real game experience.
 """
-
+print("""
+$$$$$$\  $$\   $$\ $$$$$$$$\  $$$$$$\   $$$$$$\        $$$$$$$\   $$$$$$\   $$$$$$\   $$$$$$\  $$\      $$\  $$$$$$\  $$$$$$$\  $$$$$$$\  
+$$  __$$\ $$ |  $$ |$$  _____|$$  __$$\ $$  __$$\       $$  __$$\ $$  __$$\ $$  __$$\ $$  __$$\ $$ | $\  $$ |$$  __$$\ $$  __$$\ $$  __$$\ 
+$$ /  \__|$$ |  $$ |$$ |      $$ /  \__|$$ /  \__|      $$ |  $$ |$$ /  $$ |$$ /  \__|$$ /  \__|$$ |$$$\ $$ |$$ /  $$ |$$ |  $$ |$$ |  $$ |
+$$ |$$$$\ $$ |  $$ |$$$$$\    \$$$$$$\  \$$$$$$\        $$$$$$$  |$$$$$$$$ |\$$$$$$\  \$$$$$$\  $$ $$ $$\$$ |$$ |  $$ |$$$$$$$  |$$ |  $$ |
+$$ |\_$$ |$$ |  $$ |$$  __|    \____$$\  \____$$\       $$  ____/ $$  __$$ | \____$$\  \____$$\ $$$$  _$$$$ |$$ |  $$ |$$  __$$< $$ |  $$ |
+$$ |  $$ |$$ |  $$ |$$ |      $$\   $$ |$$\   $$ |      $$ |      $$ |  $$ |$$\   $$ |$$\   $$ |$$$  / \$$$ |$$ |  $$ |$$ |  $$ |$$ |  $$ |
+\$$$$$$  |\$$$$$$  |$$$$$$$$\ \$$$$$$  |\$$$$$$  |      $$ |      $$ |  $$ |\$$$$$$  |\$$$$$$  |$$  /   \$$ | $$$$$$  |$$ |  $$ |$$$$$$$  |
+ \______/  \______/ \________| \______/  \______/       \__|      \__|  \__| \______/  \______/ \__/     \__| \______/ \__|  \__|\_______/ 
+""")
 from random import randint  #form random module i imported randint function
 number = randint(0,101) #assigned a varaibel to store random generated number from 0 to 100
 print(number)
