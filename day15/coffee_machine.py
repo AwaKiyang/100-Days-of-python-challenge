@@ -111,7 +111,7 @@ expresso = {'coffee_type':'expresso','water':50, 'coffee':18,'milk': 0, 'price' 
 latte = {'coffee_type':'latte','water':200, 'coffee':24,'milk': 150, 'price' : 2.50}   #latte dictionary
 
 
-#
+#TODO
 def system():
     """funcdtion set to loop through machine functionalities until its resources are depleted"""
     proceed = True #intialization of while loop
