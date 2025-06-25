@@ -32,8 +32,8 @@ calco = """
 print(calco)  #calco string containing or ascii charater
 def calculator():     
     """calculator function to proceed with arithmetic operations"""
-    first_number = float(input("enter first number : "))   #collecting user input
-    second_number = float(input("enter second number : "))
+    first_number = float(input("enter first number☕ : "))   #collecting user input
+    second_number = float(input("enter second number☕ : "))
     print("\n+ : add\n/ : divide\n- : subtract\n* : multiply\n")  #print usable operations
     operation = input("Pick an operation : ")  #collecting users chosen opration
 
