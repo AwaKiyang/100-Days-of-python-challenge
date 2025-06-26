@@ -95,7 +95,7 @@ def purchase(drink):
             water_quantity -= drink['water']  #decrement resources based on quantity used to produce each user command
             milk_quantity-=drink['milk']
             coffee_quantity-=drink['coffee']
-            print(f'Here is {(total - drink['price']):.2f} of your change')  #return users change
+            print(f'Here is {(total - drink['price']):.2f}$ of your change')  #return users change
             return f'Here is your  {drink['coffee_type']}☕ enjoy' #whising user
         else:
             return 'Sorry thats not enough money refund !!'  #if user cash is insuficient system refunds users money
