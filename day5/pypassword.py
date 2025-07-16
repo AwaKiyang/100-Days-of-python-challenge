@@ -47,5 +47,7 @@ def password():
     dams = ''
     for i in deal:
         dams+=i  #iterate from the shuffle deal to add its items to a string
+        
     return f'your password is : {dams}'
+    
 print(password())
