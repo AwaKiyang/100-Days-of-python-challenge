@@ -104,17 +104,17 @@ class coffee_machine:  #creating a class to enable functioning with three difere
 
         if total >= self.price:   #condition set to evalaute if user cash is suficient for the purchase machine refunds users money
             amount_sold += self.price       #increment amount sold to sum up users purchases
-            water_quantity -= self.water_needed #decrement resources based on quantity used to produce each user command
+            water_quantity -= self.water_needed     #decrement resources based on quantity used to produce each user command
             milk_quantity-= self.milk_needed
             coffee_quantity-= self.coffee_needed
             print(f'Here is {(total - self.price):.2f} of your change')  #return users change
-            return f'Here is your  {self.coffee_type}☕ enjoy' #whising user
+            return f'Here is your  {self.coffee_type}☕ enjoy'    #whising user
         else:
-            return 'Sorry thats not enough money refund !!'  #if user cash is insuficient system refunds users money
+            return 'Sorry thats not enough money refund !!'    #if user cash is insuficient system refunds users money
         
 
 
-expresso = coffee_machine('expresso',50,18,0,1.50)   #creating our objects with respectivr arguments to our class coffee_machine parameters
+expresso = coffee_machine('expresso',50,18,0,1.50)      #creating our  objects with respectivr arguments to our class coffee_machine parameters
 latte = coffee_machine('latte',200,24,150,2.50)
 cappucino = coffee_machine('Cappucino',250,24,100,3.00)
 
