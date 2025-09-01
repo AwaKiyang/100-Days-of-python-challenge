@@ -22,7 +22,7 @@ class Snake:                      # Define the Snake class
 
     def add_segment(self):        # Method to add a new segment to the snake
         snake_body = Turtle(shape="square")      # Create a new square segment
-        snake_body.color('white')                # Set color to white
+        snake_body.color('white')                # Set color to white  
         snake_body.penup()                       # Lift pen
         last_body = self.snake_list[-1].pos()    # Get position of last segment
         snake_body.goto(last_body)               # Place new segment at last segment's position
@@ -33,7 +33,7 @@ class Snake:                      # Define the Snake class
         for i in range(len(self.snake_list) -1,0,-1):  # Loop backwards through segments except head
             tp = self.snake_list[i-1].pos()            # Get position of previous segment
             self.snake_list[i].setpos(tp)              # Move current segment to previous segment's position
-
+        self.snake_list[0].color("yellow")
         self.snake_list[0].forward(20)                 # Move the head forward by 20 units
 
     def control_snake(self):      # Method to control snake direction with keyboard
@@ -63,6 +63,7 @@ class Snake:                      # Define the Snake class
         x = randint(-280,280)          # Generate random x position
         y = randint(-280,280)          # Generate random y position
         self.food.goto(x,y)            # Place food at random position
+
 
 class Scoreboard:                      # Define Scoreboard class
     def __init__(self):                # Constructor for Scoreboard
