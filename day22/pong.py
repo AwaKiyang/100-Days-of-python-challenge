@@ -74,6 +74,7 @@ class Scoreboard:
     def __init__(self):
         self.board = Turtle()  # Create a turtle object for the scoreboard
 
+
     def total_score(self, score, aligment):
         self.board.clear()  # Clear previous score
         self.board.hideturtle()  # Hide the turtle icon
