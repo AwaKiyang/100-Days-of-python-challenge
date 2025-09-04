@@ -1,5 +1,6 @@
 from turtle import Turtle,Screen  # Import Turtle and Screen classes from turtle module
-from random import randint        # Import randint function for random number generation
+from random import randint  
+import json      # Import randint function for random number generation
 
 screen = Screen()                 # Create a Screen object for the game window
 
@@ -67,19 +68,49 @@ class Snake:                      # Define the Snake class
 
 class Scoreboard:                      # Define Scoreboard class
     def __init__(self):                # Constructor for Scoreboard
-        self.score_board = Turtle()    # Create a Turtle object for scoreboard
+        self.score_board = Turtle() 
+        # Create a Turtle object for scoreboard
 
     def total_score(self,score):       # Method to display current score
         self.score_board.clear()       # Clear previous score
         self.score_board.hideturtle()  # Hide the turtle icon
         self.score_board.penup()       # Lift pen
         self.score_board.color("white")# Set text color to white
-        self.score_board.goto(0,270)   # Position score at top center
-        self.score_board.write(f'score : {score}',align='center', font=('Courier', 15, 'normal'))  # Write score
+        self.score_board.goto(-150,270)   # Position score at top center
+        self.score_board.write(f'  score : {score}   ',align='center', font=('Courier', 15, 'normal'))  # Write score
+    
+    def highestScore(self, highscore, new_score = ''):
+        self.score_board.clear()       # Clear previous score
+        self.score_board.penup()
+        self.score_board.hideturtle()
+        self.score_board.goto(150,270)
+        self.score_board.color("white")
+        self.score_board.write(f'  {new_score} highscore : {highscore}',align='center', font=('Courier', 15, 'normal'))  # Write highscorescore
+        
 
-    def wall_collisoin(self):          # Method to display game over on collision
+    def wall_collisoin(self,):          # Method to display game over on collision
         self.score_board.color("red")  # Set text color to red
         self.score_board.penup()       # Lift pen
         self.score_board.hideturtle()  # Hide turtle icon
         self.score_board.goto(0,0)     # Position text at center
-        self.score_board.write(f'GAME OVER',align='center', font=('Courier', 15, 'normal'))  # Write game over
+        self.score_board.write(f'GAME OVER ',align='center', font=('Courier', 15, 'normal'))  # Write game over
+
+class HighScore:
+    def __init__(self):
+        self.player_score = {"high_score" : 0}
+
+    def saving_score(self):
+        try:
+            #saving as a json file
+            with open('C:/Users/awaki/Desktop/100.py/day20/saved_score.json','w',encoding='utf-8') as f:  #create file if not exist
+                json.dump(self.player_score,f,ensure_ascii=False,indent=4)  
+            #ensure_ascii=False allows us to write non-ascii characters in the json file
+        except FileNotFoundError:
+            print("sorry wew could'nt locate the file saved_score.json")
+
+    def reading_score(self):
+        try:
+            with open('C:/Users/awaki/Desktop/100.py/day20/saved_score.json',encoding="utf-8") as f:
+                self.player_score = json.load(f)# json.load() reads the json file and transfers it's content 
+        except FileNotFoundError:
+            print("sorry we could no located file saved_score.json we are now creating it")
