@@ -5,6 +5,31 @@ import json      # Import randint function for random number generation
 screen = Screen()                 # Create a Screen object for the game window
 
 class Snake:                      # Define the Snake class
+    """
+    A class to represent the Snake in a classic Snake game using the turtle graphics library.
+    Attributes
+    ----------
+    snake_list : list
+        List of Turtle objects representing the segments of the snake's body.
+    spacing : int
+        Horizontal spacing used to position new segments when creating or adding to the snake.
+    food : Turtle
+        Turtle object representing the food that the snake eats.
+    Methods
+    -------
+    __init__():
+        Initializes the Snake object, creates the food Turtle, and places the food on the screen.
+    create_snake():
+        Creates the initial snake body with three segments, positions them horizontally, and adds them to snake_list.
+    add_segment():
+        Adds a new segment to the snake at the position of the last segment, extending the snake's length.
+    move_snake():
+        Moves the snake forward by updating each segment's position to follow the previous segment, and moves the head forward.
+    control_snake():
+        Sets up keyboard controls for the snake's direction (up, down, left, right), preventing reversal of direction.
+    snake_food():
+        Places the food Turtle at a random position on the screen, sets its color and size.
+    """
 
     def __init__(self):           # Constructor for Snake class
         self.snake_list = list()  # List to hold all snake segments
@@ -67,6 +92,24 @@ class Snake:                      # Define the Snake class
 
 
 class Scoreboard:                      # Define Scoreboard class
+    """
+        A class to manage and display the score information for a Snake game using the Turtle graphics library.
+        Attributes
+        ----------
+        score_board : Turtle
+            The Turtle object used for rendering score and messages on the screen.
+        Methods
+        -------
+        __init__():
+            Initializes the Scoreboard by creating a Turtle object for score display.
+        total_score(score):
+            Clears the previous score and displays the current score at the top left of the screen.
+        highestScore(highscore, new_score=''):
+            Clears the previous score display and shows the high score at the top right of the screen.
+            Optionally displays a new score alongside the high score.
+        wall_collisoin():
+            Displays a 'GAME OVER' message in red at the center of the screen when the snake collides with the wall.
+    """
     def __init__(self):                # Constructor for Scoreboard
         self.score_board = Turtle() 
         # Create a Turtle object for scoreboard
@@ -80,37 +123,61 @@ class Scoreboard:                      # Define Scoreboard class
         self.score_board.write(f'  score : {score}   ',align='center', font=('Courier', 15, 'normal'))  # Write score
     
     def highestScore(self, highscore, new_score = ''):
-        self.score_board.clear()       # Clear previous score
-        self.score_board.penup()
-        self.score_board.hideturtle()
-        self.score_board.goto(150,270)
-        self.score_board.color("white")
-        self.score_board.write(f'  {new_score} highscore : {highscore}',align='center', font=('Courier', 15, 'normal'))  # Write highscorescore
-        
+        # Clear previous score display
+        self.score_board.clear()
+        self.score_board.penup()        # Lift pen to avoid drawing lines
+        self.score_board.hideturtle()   # Hide the turtle icon
+        self.score_board.goto(150,270)  # Position high score at top right
+        self.score_board.color("white") # Set text color to white
+        # Display the high score and optionally the new score
+        self.score_board.write(f'  {new_score} highscore : {highscore}', align='center', font=('Courier', 15, 'normal'))
 
     def wall_collisoin(self,):          # Method to display game over on collision
-        self.score_board.color("red")  # Set text color to red
-        self.score_board.penup()       # Lift pen
-        self.score_board.hideturtle()  # Hide turtle icon
-        self.score_board.goto(0,0)     # Position text at center
-        self.score_board.write(f'GAME OVER ',align='center', font=('Courier', 15, 'normal'))  # Write game over
+        self.score_board.color("red")   # Set text color to red
+        self.score_board.penup()        # Lift pen to avoid drawing lines
+        self.score_board.hideturtle()   # Hide turtle icon
+        self.score_board.goto(0,0)      # Position text at center of screen
+        # Display 'GAME OVER' message
+        self.score_board.write(f'GAME OVER ', align='center', font=('Courier', 15, 'normal'))
 
 class HighScore:
+    """
+    Manages the high score for a game by saving and loading the score from a JSON file.
+    Attributes
+    ----------
+    player_score : dict
+        Dictionary containing the high score with the key 'high_score'.
+    Methods
+    -------
+    saving_score():
+        Saves the current high score to a JSON file at the specified path.
+        Handles file not found errors and prints a message if the file cannot be located.
+    reading_score():
+        Loads the high score from a JSON file at the specified path.
+        Handles file not found errors and prints a message if the file cannot be located,
+        and creates the file if it does not exist.
+    """
     def __init__(self):
+        # Initialize dictionary to store high score
         self.player_score = {"high_score" : 0}
 
     def saving_score(self):
         try:
-            #saving as a json file
-            with open('C:/Users/awaki/Desktop/100.py/day20/saved_score.json','w',encoding='utf-8') as f:  #create file if not exist
-                json.dump(self.player_score,f,ensure_ascii=False,indent=4)  
-            #ensure_ascii=False allows us to write non-ascii characters in the json file
+            # Save high score as a JSON file
+            with open('C:/Users/awaki/Desktop/100.py/day20/saved_score.json','w',encoding='utf-8') as f:
+                # Write player_score dictionary to file with indentation for readability
+                json.dump(self.player_score, f, ensure_ascii=False, indent=4)
+                # ensure_ascii=False allows writing non-ASCII characters in the JSON file
         except FileNotFoundError:
-            print("sorry wew could'nt locate the file saved_score.json")
+            # Handle case where file path is invalid or inaccessible
+            print("sorry we couldn't locate the file saved_score.json")
 
     def reading_score(self):
         try:
-            with open('C:/Users/awaki/Desktop/100.py/day20/saved_score.json',encoding="utf-8") as f:
-                self.player_score = json.load(f)# json.load() reads the json file and transfers it's content 
+            # Read high score from JSON file
+            with open('C:/Users/awaki/Desktop/100.py/day20/saved_score.json', encoding="utf-8") as f:
+                # Load JSON content into player_score dictionary
+                self.player_score = json.load(f)
         except FileNotFoundError:
-            print("sorry we could no located file saved_score.json we are now creating it")
+            # Handle case where file does not exist and notify user
+            print("sorry we could not locate file saved_score.json, we are now creating it")

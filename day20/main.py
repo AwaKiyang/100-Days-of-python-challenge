@@ -43,65 +43,70 @@ Main Game Loop:
 Game Exit:
     - Waits for a mouse click to close the game window.
 """
-from turtle import Turtle,Screen  # Import Turtle graphics classes
-from snake_game import Snake, Scoreboard,HighScore  # Import custom Snake and Scoreboard classes
+from turtle import Turtle, Screen  # Import Turtle graphics classes
+from snake_game import Snake, Scoreboard, HighScore  # Import custom Snake, Scoreboard, and HighScore classes
 import time  # Import time module for controlling game speed
-from turtle import Turtle, Screen  # Redundant import, but imports Turtle and Screen again
-import json
+import json  # Import json for high score persistence
 
-screen = Screen()  # Create the main game window
-screen.setup(width=600,height=600)  # Set window size to 600x600 pixels
+# Create the main game window
+screen = Screen()
+screen.setup(width=600, height=600)  # Set window size to 600x600 pixels
 screen.bgcolor('black')  # Set background color to black
 screen.title("My snake game")  # Set window title
 screen.tracer(0)  # Turn off automatic screen updates for smoother animation
 
-snake = Snake()  # Create a Snake object
-highscore = HighScore()
-
-scoreboard = Scoreboard()  # Create a Scoreboard object
-highscore_board = Scoreboard()
+# Initialize game objects
+snake = Snake()  # Create a Snake object to manage the snake's segments and movement
+highscore = HighScore()  # Create a HighScore object to manage high score persistence
+scoreboard = Scoreboard()  # Create a Scoreboard object to display and update the score
+highscore_board = Scoreboard()  # Create a Scoreboard object for displaying high score
 
 snake.create_snake()  # Initialize the snake's starting segments
 snake.snake_food()  # Place the first food item on the screen
+
 proceed = True  # Boolean flag to control the main game loop
 score = 0  # Initialize the player's score
-highscore.reading_score()
 
-while proceed == True:  # Main game loop
+highscore.reading_score()  # Load the high score from persistent storage
+
+while proceed:  # Main game loop
     screen.update()  # Manually update the screen for smooth animation
     time.sleep(0.15)  # Pause briefly to control the snake's speed
     snake.move_snake()  # Move the snake forward in its current direction
     snake.control_snake()  # Handle user input for snake direction
 
-    highscore_board.highestScore(highscore= highscore.player_score["high_score"])
+    # Display the current high score on the scoreboard
+    highscore_board.highestScore(highscore=highscore.player_score["high_score"])
+
+    # Function to update and save high score if current score exceeds it
     def setting_score():
         if score > highscore.player_score["high_score"]:
-           highscore.player_score["high_score"] = score
-           highscore.saving_score()
-           highscore_board.highestScore(highscore= highscore.player_score["high_score"], new_score= "NEW")
+            highscore.player_score["high_score"] = score  # Update high score
+            highscore.saving_score()  # Save new high score to persistent storage
+            highscore_board.highestScore(highscore=highscore.player_score["high_score"], new_score="NEW")  # Indicate new high score
 
-    # Food Collision Detection
-    if snake.snake_list[0].distance(snake.food) < 15:  # Check if snake head is close to food
-        snake.snake_food()  # Place new food
-        score+=1  # Increment the score
+    # --- Food Collision Detection ---
+    # Check if snake head is close to food
+    if snake.snake_list[0].distance(snake.food) < 15:
+        snake.snake_food()  # Place new food at a random location
+        score += 1  # Increment the score
         scoreboard.total_score(score)  # Update the displayed score
         snake.add_segment()  # Add a new segment to the snake's body
 
-    # Wall Collision Detection
-    if snake.snake_list[0].xcor() > 280 or snake.snake_list[0].ycor() > 280 or snake.snake_list[0].xcor() < -280 or snake.snake_list[0].ycor() < -280:
-       setting_score()
-       scoreboard.wall_collisoin()  # Display a message for wall collision
-       proceed = False  # End the game loop
+    # --- Wall Collision Detection ---
+    # Check if snake head collides with the wall boundaries
+    if ( snake.snake_list[0].xcor() > 280 or snake.snake_list[0].ycor() > 280 or snake.snake_list[0].xcor() < -280 or snake.snake_list[0].ycor() < -280):
+        setting_score()  # Update high score if needed
+        scoreboard.wall_collisoin()  # Display a message for wall collision
+        proceed = False  # End the game loop
 
-    # Self Collision Detection
-    for i in range(1, len(snake.snake_list)):  # Check collision with snake's own body
+    # --- Self Collision Detection ---
+    # Check if snake head collides with any part of its own body
+    for i in range(1, len(snake.snake_list)):
         if snake.snake_list[0].distance(snake.snake_list[i]) < 15:
-            setting_score()
+            setting_score()  # Update high score if needed
             scoreboard.wall_collisoin()  # Display a message for self collision
             proceed = False  # End the game loop
 
-    
-        
-    
-
-screen.exitonclick()  # Wait for a mouse click to close the game window
+# Wait for a mouse click to close the game window
+screen.exitonclick()
