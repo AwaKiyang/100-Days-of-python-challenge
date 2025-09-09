@@ -28,7 +28,7 @@ from turtle import Screen  # Importing the Screen class from the turtle module
 from states_turtle import State_location  # Importing the State_location class from the states_turtle module
 st = State_location()  # Creating an object st
 screen = Screen()  # Initializing the screen
-screen.title("STATES GAME")  # Setting the screen title
+screen.title("US STATES GAME")  # Setting the screen title
 screen.bgcolor("black")  # Setting the screen background color
 screen.setup(height=510, width=740)  # Setting the screen dimensions
 screen.bgpic("blank_states_img.gif")  # Setting the background image
@@ -50,8 +50,8 @@ correct_guesses = 0 #intialixing variable to increment by on number of correct g
 
 proceed = True  # Setting proceed to True
 while proceed:  # Initializing the game loop
-    # Collecting user input from the screen to ask the user to guess a state found on the map
-    user_input = screen.textinput(title="Make your guess", prompt="Which state do you know about: ")
+    # Collecting user input from the screen to ask the user to guess a state found on the map and showing number or correcying guesses
+    user_input = screen.textinput(title=f"{correct_guesses}/50 states correct", prompt="Which state do you know about: ").capitalize()
     if user_input in states_list:  # If user_input is in states_list
         # Looping through each state and coordinate from the states_and_coordinates list of dictionaries
         for states in states_and_coordinates:
