@@ -40,3 +40,4 @@ text.insert(END, "Example of multi-line text entry.")
 print(text.get("1.0", END))
 text.grid(column=2, row=3)
 
+window.mainloop()

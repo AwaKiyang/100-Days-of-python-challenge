@@ -6,7 +6,7 @@ import math
 PINK = "#e2979c"
 RED = "#e7305b"
 GREEN = "#9bdeac"
-YELLOW = "#f7f5dd"
+YELLOW = "#ecd104"
 
 # Font and timer durations
 FONT_NAME = "Courier"
