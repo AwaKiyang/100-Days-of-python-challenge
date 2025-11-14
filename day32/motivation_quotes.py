@@ -38,3 +38,4 @@ if weekday == 3:  #initialization code to exucute if weekday is thursday
 
         message = f'Subject: {subject}\n\n {body}'
         smtp.sendmail(from_addr= my_eamil, to_addrs= 'awakiyang4@gmail.com', msg=message)  
+        
