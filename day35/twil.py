@@ -2,7 +2,7 @@ import requests
 from twilio.rest import Client
 
 account_sid = 'AC77c24b2911e64b9baaeed6505eacbe01'
-auth_token = 'b4af29f59498ae71277fedf85179fcc4'
+auth_token = '039bae95483662b8a5c0a38ae9f2a0f8'
 
 owm = "https://api.openweathermap.org/data/2.5/forecast"
 
