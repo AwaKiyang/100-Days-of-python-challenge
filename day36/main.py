@@ -1,92 +1,124 @@
+"""
+Stock & News SMS Alert System (main.py)
+
+Summary:
+--------
+This script monitors Tesla Inc. (TSLA) stock price movements and sends SMS alerts
+containing recent news headlines using Twilio.
+
+How It Works:
+-------------
+1. Fetch TSLA stock data (last 2 days) from the Twelve Data API.
+2. Calculate the percentage change between yesterday's and the previous day's closing prices.
+3. Fetch the top 3 recent news articles related to TSLA from NewsData.io.
+4. Send an SMS for each news article using Twilio, including:
+       - Stock price movement (UP 🔺 or DOWN 🔻)
+       - News headline
+       - Short description
+
+Purpose:
+--------
+Automates real-time financial monitoring and delivers instant stock movement
+and news alerts via SMS.
+
+Dependencies:
+-------------
+- requests           → For API calls
+- twilio.rest.Client → For sending SMS alerts
+
+APIs Used:
+-----------
+1. Twelve Data API  → Stock price time series
+2. NewsData.io      → Financial and market-related news
+3. Twilio SMS API   → Sending notifications
+"""
+
 import requests
 from twilio.rest import Client
 
+# Twilio account credentials
 account_sid = 'AC77c24b2911e64b9baaeed6505eacbe01'
 auth_token = '039bae95483662b8a5c0a38ae9f2a0f8'
 
-STOCK = "TSLA"
-COMPANY_NAME = "Tesla Inc"
+STOCK = "TSLA"  # Stock symbol
+COMPANY_NAME = "Tesla Inc"  # Company name
 
-
-
-## STEP 1: Use https://www.alphavantage.co
-# When STOCK price increase/decreases by 5% between yesterday and the day before yesterday then print("Get News").
-# replace the "demo" apikey below with your own key from https://www.alphavantage.co/support/#api-key
-
+# Parameters for stock API request
 stock_api_parameters = {
     'symbol' : STOCK,
     'interval' : '1day',
     'apikey' : "0627d198354d44bca010bfee5f1f69d2",
-    'outputsize' : 2
+    'outputsize' : 2  # Get last 2 days of data
 }
+
+# Parameters for news API request
 news_api_parameters = {
     'apikey' : 'pub_0a45a0122fb34ee2b391eab8e2aa6708',
     'country' : 'us',
     'language' : 'en',
     'symbol' : STOCK,
-    'size' : 3
+    'size' : 3  # Get top 3 news articles
 }
-STOCK_URL = 'https://api.twelvedata.com/time_series'
-NEWS_URL = 'https://newsdata.io/api/1/market'
 
+STOCK_URL = 'https://api.twelvedata.com/time_series'  # Stock API endpoint
+NEWS_URL = 'https://newsdata.io/api/1/market'         # News API endpoint
+
+# Fetch stock data
 stock_response = requests.get(STOCK_URL, params=stock_api_parameters)
 data = stock_response.json()
 
+# Fetch news data
 news_reponse = requests.get(NEWS_URL, params=news_api_parameters)
 news = news_reponse.json()
 
-
 def percentage():
+    """
+    Calculates the percentage change in closing prices between yesterday and the day before.
+
+    Returns:
+        str: A formatted string indicating the percentage change in TSLA's closing price,
+             prefixed with an up arrow (🔺) for positive change or a down arrow (🔻) for negative change.
+    """
+    # Get closing prices for yesterday and the day before
     yesterday_closing = float(data['values'][0]['close'])
     before_yesterday_closing = float(data['values'][1]['close'])
+    # Calculate price change and percentage change
     price_change = yesterday_closing - before_yesterday_closing
     percentage_change = (price_change / before_yesterday_closing) * 100
 
+    # Format the percentage change with an arrow
     if percentage_change > 0:
         return f'TSLA: 🔺{percentage_change:.3f}%'
     else:
         return f'TSLA: 🔻{percentage_change:.3f}%'
 
-rise = percentage()
+rise = percentage()  # Store formatted percentage change
 
 def get_news():
+    """
+    Sends SMS notifications for each news article in the provided news results.
+
+    Iterates through the news articles, initializes a Twilio client, and sends an SMS containing
+    the stock change, headline, and brief description to a specified phone number. Prints the
+    message SID upon successful sending, and prints an error message if sending fails.
+
+    Raises:
+        Exception: If there is an error during the SMS sending process.
+    """
+    # Loop through each news article in the results
     for news_article in news["results"]:
         try:
+            # Initialize Twilio client
             client = Client(account_sid, auth_token)
+            # Send SMS with stock change, headline, and brief
             message = client.messages.create(
-            from_='+15013827337',
-            body=f'{rise} \n Headline: {news_article['title']} \n Brief: {news_article["description"]}',
-            to='+237652669338'
+                from_='+15013827337',
+                body=f'{rise} \n Headline: {news_article["title"]} \n Brief: {news_article["description"]}',
+                to='+237652669338'
             )
-            print(message.sid)
+            print(message.sid)  # Print message SID for confirmation
         except Exception as e:
+            # Print error if message sending fails
             print(f'sorry we could not send you message because of {e}')
-get_news()
-        
 
-
-
-
-
-
-
-     
-    
-## STEP 2: Use 
-
-# Instead of printing ("Get News"), actually get the first 3 news pieces for the COMPANY_NAME. 
-
-## STEP 3: Use https://www.twilio.com
-# Send a seperate message with the percentage change and each article's title and description to your phone number. 
-
-#Optional: Format the SMS message like this: 
-"""
-TSLA: 🔺2%
-Headline: Were Hedge Funds Right About Piling Into Tesla Inc. (TSLA)?. 
-Brief: We at Insider Monkey have gone over 821 13F filings that hedge funds and prominent investors are required to file by the SEC The 13F filings show the funds' and investors' portfolio positions as of March 31st, near the height of the coronavirus market crash.
-or
-"TSLA: 🔻5%
-Headline: Were Hedge Funds Right About Piling Into Tesla Inc. (TSLA)?. 
-Brief: We at Insider Monkey have gone over 821 13F filings that hedge funds and prominent investors are required to file by the SEC The 13F filings show the funds' and investors' portfolio positions as of March 31st, near the height of the coronavirus market crash.
-"""
-
+get_news()  # Call function to send news SMS
