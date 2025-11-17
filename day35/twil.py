@@ -64,3 +64,11 @@ except Exception as e:
 
 finally:
     print("Process completed.")
+
+
+"""
+NB : storing you apikeys like this in your code is very risky since someone can just copy an use
+    so in day 36 we will to to store our api keys and passwords in your machine for your own personal use 
+    1 using .env file were we are going to store or api keys, secrets and others and then using the python-dotenv and os module to retrieve them
+    2 storing them as environment variables and retriving them using the os module
+"""

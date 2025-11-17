@@ -35,10 +35,13 @@ APIs Used:
 
 import requests
 from twilio.rest import Client
+import os   # import the os module so as to be able to get environment variable stored in our system
+from dotenv import load_dotenv #used with os module in other to access variable stored in our .env file
+load_dotenv()
 
 # Twilio account credentials
 account_sid = 'AC77c24b2911e64b9baaeed6505eacbe01'
-auth_token = '039bae95483662b8a5c0a38ae9f2a0f8'
+auth_token = os.getenv('auth_token')  #auth_token was the environmetn variable stored in our system which is the api key of our twliio account
 
 STOCK = "TSLA"  # Stock symbol
 COMPANY_NAME = "Tesla Inc"  # Company name
@@ -47,13 +50,13 @@ COMPANY_NAME = "Tesla Inc"  # Company name
 stock_api_parameters = {
     'symbol' : STOCK,
     'interval' : '1day',
-    'apikey' : "0627d198354d44bca010bfee5f1f69d2",
+    'apikey' : os.getenv('stocksApikey'), #this is the api key of our stock api_endpoint which was stored in our .env file and called using the os module and  dot-env.load_dotenv() method
     'outputsize' : 2  # Get last 2 days of data
 }
 
 # Parameters for news API request
 news_api_parameters = {
-    'apikey' : 'pub_0a45a0122fb34ee2b391eab8e2aa6708',
+    'apikey' : os.getenv('newsApikey'), #this is the api key of our news api_endpoint which was stored in our .env file and called using the os module and dot-env.load_dotenv() method
     'country' : 'us',
     'language' : 'en',
     'symbol' : STOCK,
@@ -66,6 +69,7 @@ NEWS_URL = 'https://newsdata.io/api/1/market'         # News API endpoint
 # Fetch stock data
 stock_response = requests.get(STOCK_URL, params=stock_api_parameters)
 data = stock_response.json()
+print(data)
 
 # Fetch news data
 news_reponse = requests.get(NEWS_URL, params=news_api_parameters)
@@ -113,10 +117,11 @@ def get_news():
             # Send SMS with stock change, headline, and brief
             message = client.messages.create(
                 from_='+15013827337',
-                body=f'{rise} \n Headline: {news_article["title"]} \n Brief: {news_article["description"]}',
+                body=f'{rise} \n Headline: {news_article["title"]}',
                 to='+237652669338'
             )
             print(message.sid)  # Print message SID for confirmation
+            print('  message deliverd')
         except Exception as e:
             # Print error if message sending fails
             print(f'sorry we could not send you message because of {e}')

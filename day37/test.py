@@ -1,3 +1,4 @@
-from datetime import datetime, date
-today = date()
-print(today)
+from datetime import datetime
+today = datetime.now()
+waar = str(today.date()).replace('-','')
+print(type(waar))
