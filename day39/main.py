@@ -1,117 +1,52 @@
-import requests
-import os
-from dotenv import load_dotenv
-load_dotenv()
 
-# ---------------------------- Sheety Setup ----------------------------- #
-# This is the Sheety API endpoint that points to your Google Sheet
-Sheety_Endpoint = 'https://api.sheety.co/6428f16d9a6d7a7bb19162e551c723d3/flightDeals/prices'
+from update_sheet import update_google_sheet
+from searching_flight import searching_flight
 
-# Authorization token for Sheety (stored inside .env as "Authorization")
-sheety_header = {
-    'Authorization' : os.getenv('Authorization')
-}
+#--------------------Call if you want to update you spreadsheet information-----------------#
 
-# Request the spreadsheet data
-sheety_reponse = requests.get(url=Sheety_Endpoint)
-spread_sheet_data = sheety_reponse.json()
+'''update_google_sheet().update_sheety_sheet()'''
 
+# -------------------------------------------------------------- #
+#   LOAD GOOGLE SHEET FLIGHT DATA
+#   This retrieves the list of cities and their lowest price
+#   from your Google Sheet via Sheety API.
+#   It returns a dictionary that contains the "prices" list.
+# -------------------------------------------------------------- #
+cities_google_data = update_google_sheet().spreadsheet_data()
+print(cities_google_data)
 
-
-# ---------------- Amadeus Token Generation Function ------------------ #
-def get_token():
-    """
-    Generates an access token from the Amadeus API using client credentials.
-    It sends a POST request with your API key and secret to obtain a Bearer token.
-    """
-
-    token_endpoint = "https://test.api.amadeus.com/v1/security/oauth2/token"
-
-    # Required headers for form-url-encoded request
-    headers = {
-        'Content-Type': 'application/x-www-form-urlencoded'
-    }
-
-    # OAuth2 parameters for client credentials grant
-    parameters = {
-        'grant_type': 'client_credentials',
-        'client_id': os.getenv('amadues-client-id'),
-        'client_secret': os.getenv('amadues-secret')
-    }
-    
-    # Send authentication request
-    response = requests.post(token_endpoint, data=parameters, headers=headers)
-
-    # Extract the access token from the JSON response
-    auth_token = response.json()['access_token']
-    return auth_token
-
-
-# Print token to verify working
-print(get_token())
-
-
-# ----------------- Retrieve IATA Code from Amadeus API ---------------- #
-def get_city_iataCode(city):
-    """
-    Takes a city name (e.g. 'Paris') and sends a request to the Amadeus
-    city search API to retrieve the corresponding IATA code (e.g. 'PAR').
-    """
-
-    amadues_city_search_endpoint = 'https://test.api.amadeus.com/v1/reference-data/locations/cities'
-
-    # Generate fresh access token
-    auth_token = get_token()
-
-    # Authorization header using the token
-    headers = {
-        'Authorization':f'Bearer {auth_token}'
-    }
-
-    # Parameters for city lookup
-    parameters ={
-        "keyword": city,
-        'max' : 1
-        }
-
-    # Send search request and return the first result’s IATA code
-    city_search_reponse = requests.get(url=amadues_city_search_endpoint, params=parameters, headers=headers)
-    return city_search_reponse.json()['data'][0]['iataCode']
-
-
-
-# ---------------------- Update Spreadsheet with IATA ------------------ #
-def update_sheety_sheet():
-    """
-    Loops through each row in the Sheety spreadsheet.
-    For every city found, it retrieves the IATA code from Amadeus
-    and updates the Google Sheet via a PUT request.
-    """
-
+# -------------------------------------------------------------- #
+#   LOOP THROUGH EACH CITY IN THE SHEET
+#   For every city:
+#       - Retrieve its IATA code (already in the sheet)
+#       - Search for flights using your searching_flight class
+#       - Compare the minimum price returned by Amadeus
+#         with the stored "lowestPrice" in your Google Sheet.
+#       - Print a message if the new price is cheaper.
+# -------------------------------------------------------------- #
+for city_info in cities_google_data:
     try:
+        # ------------------------------------------- #
+        # Create a new flight search object using the
+        # IATA code stored in your Google Sheet.
+        # ------------------------------------------- #
+        destination_city = searching_flight(cities_iata=city_info['iataCode'])
 
-        for city_name in spread_sheet_data['prices']:
+        # Perform the actual flight search request
+        destination = destination_city.fligth_search()
 
-            # Build update endpoint for each row using its ID
-            sheety_update_endpoint = f'https://api.sheety.co/6428f16d9a6d7a7bb19162e551c723d3/flightDeals/prices/{city_name['id']}'
-
-            # Get IATA code for the city
-            iatacode = get_city_iataCode(city_name["city"])
-
-            # Sheety API expects data under a "price" object
-            parameters = {
-                'price' : {
-                    'iataCode' : iatacode
-                }
-            }
-
-            # Send update request to Sheety
-            update_response = requests.put(url=sheety_update_endpoint, json=parameters)
-            print(update_response.text)
+        # ------------------------------------------- #
+        # Compare Amadeus flight price vs Google Sheet
+        # lowestPrice value.
+        # ------------------------------------------- #
+        if destination['minimum_price'] < city_info['lowestPrice']:
+            print(
+                f" Getting flight for {city_info['city']}...., "
+                f"price is lower {destination['minimum_price']} instead of {city_info['lowestPrice']}"
+            )
+        else:
+            print('sorry no flight found')
 
     except Exception as e:
-        # Catch and print any errors
-        print(e)
-
-# Execute the update function
-update_sheety_sheet()
+        # Print any unexpected error during flight search
+        print(f'{e}')
