@@ -1,6 +1,11 @@
 
 from update_sheet import update_google_sheet
 from searching_flight import searching_flight
+from twilio.rest import Client
+import os
+# Twilio account credentials
+account_sid = 'AC77c24b2911e64b9baaeed6505eacbe01'
+auth_token = os.getenv('auth_token')  #auth_token was the environmetn variable stored in our system which is the api key of our twliio account
 
 #--------------------Call if you want to update you spreadsheet information-----------------#
 
@@ -40,10 +45,20 @@ for city_info in cities_google_data:
         # lowestPrice value.
         # ------------------------------------------- #
         if destination['minimum_price'] < city_info['lowestPrice']:
-            print(
+            '''print(
                 f" Getting flight for {city_info['city']}...., "
                 f"price is lower {destination['minimum_price']} instead of {city_info['lowestPrice']}"
+            )'''
+            
+            client = Client(account_sid, auth_token)
+            # Send SMS with flight price change, headline, and brief
+            message = client.messages.create(
+                from_='+15013827337',
+                body=f"price is lower {destination['minimum_price']} instead of {city_info['lowestPrice']}",
+                to='+237652669338'
             )
+            print(message.sid)  # Print message SID for confirmation
+
         else:
             print('sorry no flight found')
 
