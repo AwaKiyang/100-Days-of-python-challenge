@@ -70,8 +70,7 @@ class searching_flight:
         # Parse JSON response
         flight_info = fligth_search_reponse.json()
 
-        # Dictionary to store the cheapest flight found
-        cheapest_flight = dict()
+
 
         try:
             # Ensure flights were found
@@ -85,6 +84,9 @@ class searching_flight:
 
                 # Find the minimum price
                 minimum_price = min(price_list)
+
+                # Dictionary to store the cheapest flight found
+                cheapest_flight = dict()
 
                 # Loop through flights to match the cheapest offer
                 for flight in flight_info['data']:
@@ -102,13 +104,10 @@ class searching_flight:
                             'return_date': return_date,
                             'minimum_price': minimum_price
                         }
-
-            else:
-                # No flights found for this route/date range
-                print('sorry no flight found')
-
+                return cheapest_flight
+            
         except Exception as e:
             # Handles unexpected data errors
             print(f"sorry we ecountered an error {e}")
 
-        return cheapest_flight
+        

@@ -17,8 +17,8 @@ auth_token = os.getenv('auth_token')  #auth_token was the environmetn variable s
 #   from your Google Sheet via Sheety API.
 #   It returns a dictionary that contains the "prices" list.
 # -------------------------------------------------------------- #
-cities_google_data = update_google_sheet().spreadsheet_data()
-print(cities_google_data)
+cities_google_data = update_google_sheet().spreadsheet_data()['prices']
+
 
 # -------------------------------------------------------------- #
 #   LOOP THROUGH EACH CITY IN THE SHEET
@@ -39,29 +39,28 @@ for city_info in cities_google_data:
 
         # Perform the actual flight search request
         destination = destination_city.fligth_search()
-
         # ------------------------------------------- #
         # Compare Amadeus flight price vs Google Sheet
         # lowestPrice value.
         # ------------------------------------------- #
         if destination['minimum_price'] < city_info['lowestPrice']:
-            '''print(
-                f" Getting flight for {city_info['city']}...., "
-                f"price is lower {destination['minimum_price']} instead of {city_info['lowestPrice']}"
-            )'''
-            
+            ''' print(
+                    f" Getting flight for {city_info['city']}...., ",
+                    f"price is lower {destination['minimum_price']} instead of {city_info['lowestPrice']}"
+                )
+                '''
             client = Client(account_sid, auth_token)
             # Send SMS with flight price change, headline, and brief
             message = client.messages.create(
                 from_='+15013827337',
-                body=f"price is lower {destination['minimum_price']} instead of {city_info['lowestPrice']}",
+                body=f"Getting flight for {city_info['city']}...., price is lower {destination['minimum_price']} instead of {city_info['lowestPrice']}",
                 to='+237652669338'
             )
-            print(message.sid)  # Print message SID for confirmation
-
+            print(message.sid)  # Print message SID for confirmation'''
+        
         else:
             print('sorry no flight found')
 
     except Exception as e:
         # Print any unexpected error during flight search
-        print(f'{e}')
+        print(f'the progam has ended')

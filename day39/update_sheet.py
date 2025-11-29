@@ -10,7 +10,7 @@ class update_google_sheet:
 
     def __init__(self):
         # This is the Sheety API endpoint that points to your Google Sheet
-        self.Sheety_Endpoint = 'https://api.sheety.co/6428f16d9a6d7a7bb19162e551c723d3/flightDeals/prices'
+        self.Sheety_Endpoint = 'https://api.sheety.co/d760ba2332a54176d5707cd4a6b33b2d/flightDeals/prices'
 
         # Authorization token for Sheety (stored inside .env as "Authorization")
         self.sheety_header = {
@@ -63,7 +63,7 @@ class update_google_sheet:
             for city_name in self.spreadsheet_data()['prices']:
 
                 # Build update endpoint for each row using its ID
-                sheety_update_endpoint = f'https://api.sheety.co/6428f16d9a6d7a7bb19162e551c723d3/flightDeals/prices/{city_name['id']}'
+                sheety_update_endpoint = f'https://api.sheety.co/d760ba2332a54176d5707cd4a6b33b2d/flightDeals/prices/[Object ID]/{city_name['id']}'
 
                 # Get IATA code for the city
                 iatacode = self.get_city_iataCode(city=city_name["city"])
@@ -83,4 +83,5 @@ class update_google_sheet:
             # Catch and print any errors
             print(e)
 
-    # Execute the update function
+# Execute the update function
+#------------update_google_sheet().update_sheety_sheet()------#
