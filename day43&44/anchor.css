@@ -1,0 +1,10 @@
+body{
+    color:rgb(46, 186, 79);
+    background-color: bisque;
+}
+a[draggable="false"]{
+    color: blue;
+}
+/*a[draggable]{
+    color: yellow;  (will function)
+*/
