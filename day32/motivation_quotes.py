@@ -1,6 +1,7 @@
 from datetime import datetime
 import random
 import smtplib
+import os
 
 today = datetime.now()
 weekday = today.weekday()
@@ -24,7 +25,7 @@ if weekday == 3:  #initialization code to exucute if weekday is thursday
     '''
 
     my_eamil = "awakiyang9@gmail.com"
-    password = "jtry lvtb oaog qckl"
+    password = os.getenv("email_password") 
 
     with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
         smtp.ehlo()

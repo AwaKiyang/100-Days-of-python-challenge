@@ -2,7 +2,7 @@
 from update_sheet import update_google_sheet
 from searching_flight import searching_flight
 import smtplib
-
+import os
 #--------------------Call if you want to update you spreadsheet information-----------------#
 
 '''update_google_sheet().update_sheety_sheet()'''
@@ -42,7 +42,7 @@ for city_info in cities_google_data:
         if destination['minimum_price'] < city_info['lowestPrice']:
 
             my_email = "awakiyang9@gmail.com"
-            password = "jtry lvtb oaog qckl"   # App Password for Gmail
+            password = os.getenv("email_password")   # App Password for Gmail
             user_email_list = update_google_sheet().user_email()
 
             for user_email in user_email_list:

@@ -15,6 +15,7 @@ APIs used:
 import requests
 import datetime
 import smtplib
+import os
 
 # Your coordinates
 my_lat = 3.814616
@@ -79,7 +80,7 @@ def is_night():
 if Iss_overhad() and is_night():
 
     my_email = "awakiyang9@gmail.com"
-    password = "jtry lvtb oaog qckl"   # App Password for Gmail
+    password = os.getenv("email_password")    # App Password for Gmail
 
     with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
         smtp.starttls()

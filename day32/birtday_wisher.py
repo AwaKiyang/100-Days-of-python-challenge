@@ -44,6 +44,7 @@ from datetime import datetime   # Handles date and time operations
 import pandas as pd             # For reading and manipulating CSV data
 import smtplib                  # For sending emails through SMTP protocol
 import random                   # For selecting random birthday templates
+import os                       # For calling email password environment variable
 
 
 # ====================== LOAD AND PREPARE BIRTHDAY DATA ======================
@@ -91,7 +92,7 @@ for person in day_month_list:
     if person["day"] == birth_day and person["month"] == birth_month:
         # ----- Email account credentials -----
         my_email = "awakiyang9@gmail.com"         # Sender's email address
-        password = "jtry lvtb oaog qckl"          # Gmail App Password (not plain password)
+        password = os.getenv("email_password")           # Gmail App Password (called using os module)
 
         # ----- Personalize the letter -----
         personalized_letter = letter.replace('[NAME]', person["name"])

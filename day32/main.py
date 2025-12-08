@@ -1,7 +1,8 @@
 import smtplib
+import os
 
 my_eamil = "awakiyang9@gmail.com"
-password = "jtry lvtb oaog qckl"
+password = os.getenv("email_password") 
 
 proceed = True
 with smtplib.SMTP('smtp.gmail.com', 587) as smtp:
