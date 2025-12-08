@@ -16,6 +16,10 @@ class update_google_sheet:
         self.sheety_header = {
             'Authorization' : os.getenv('Authorization')
         }
+        self.user_endpoint = 'https://api.sheety.co/d760ba2332a54176d5707cd4a6b33b2d/untitledSpreadsheet/sheet1'
+        self.user_headers = {
+            'Authorization' : os.getenv('userAuth')
+        }
 
     def spreadsheet_data(self):
         # Request the spreadsheet data
@@ -82,6 +86,36 @@ class update_google_sheet:
         except Exception as e:
             # Catch and print any errors
             print(e)
+
+    def user_email(self):
+        user_get_reponse = requests.get(url=self.user_endpoint, headers=self.user_headers)
+        user_sheet = user_get_reponse.json()
+        return [email['email'] for email in user_sheet['sheet1']]
+    
+    def user_auth(self):
+
+        user_email_list = self.user_email()  
+        user_first_name = input('please enter your first name : ')
+        user_last_name = input('please enter your last name : ')
+        user_email = ''
+        proceed = True
+        while proceed == True:
+            user_email = input('please enter your last email : ')
+            if user_email not in user_email_list:
+                proceed = False
+                pass
+            else:
+                print('user email already exist enter another email')
+
+        data = {
+            'sheet1' : {
+                'firstName' : user_first_name,
+                'lastName' : user_last_name,
+                'email' : user_email
+            }
+        }
+        user_create = requests.post(url=self.user_endpoint, json=data)
+        return user_create.text
 
 # Execute the update function
 #------------update_google_sheet().update_sheety_sheet()------#
