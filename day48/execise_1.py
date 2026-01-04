@@ -19,9 +19,12 @@ data = dict()  # Dictionary to store event data
 
 # Find all elements containing the event dates using XPath
 upcoming_date = driver.find_elements(By.XPATH, value='//*[@id="content"]/div/section/div[2]/div[2]/div/ul/li/time')
+#upcoming_date = driver.find_elements(By.CSS_SELECTOR, value='.event-widgets time') #another element selector used optional
+
 
 # Find all elements containing the event names using XPath
-upcoming_event = driver.find_elements(By.XPATH, value='//*[@id="content"]/div/section/div[2]/div[2]/div/ul/li/a')
+#upcoming_event = driver.find_elements(By.XPATH, value='//*[@id="content"]/div/section/div[2]/div[2]/div/ul/li/a') #another element selector used optional
+upcoming_event = driver.find_elements(By.CSS_SELECTOR, value='.event-widget li a')
 
 # Iterate over the events and dates, storing them in the data dictionary
 for i, date, event in zip(range(len(upcoming_event)), upcoming_date, upcoming_event):
