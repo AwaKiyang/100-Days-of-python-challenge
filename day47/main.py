@@ -2,7 +2,9 @@
 from bs4 import BeautifulSoup
 import os
 import smtplib
+from selenium import webdriver
 
+driver = webdriver.Chrome()
 def price_alert_monitor():
     """
     Monitor product price from an HTML file and send email alert if price drops below threshold.
