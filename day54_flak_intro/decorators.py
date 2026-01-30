@@ -43,3 +43,27 @@ def get_ice_fudge(flavour):
     print(f'get you {flavour} fudge on the ice cream')  # Print message for serving ice cream with fudge
 
 get_ice_fudge('vanila')  # Call the decorated function with a flavor argument
+
+"""Create a logging_decorator() which is going to print the name of the function that was called, the arguments it was given and finally the returned output: 
+You called a_function(1,2,3) 
+It returned: 6 
+The value 6 is the return value of the function.
+Don't change the body of a_function. 
+IMPORTANT: You only need to use *args, you can ignore **kwargs in this exercise. 
+"""
+
+#solution
+
+def logging_decorator(func):
+    # Define a wrapper that accepts any number of positional arguments
+    def wrapper(*args):
+        print(f'You called {func.__name__}{args}')  # Print the function name and arguments
+        print(f'It returned : {func(*args)}')       # Print the return value of the function
+        return func(*args)                          # Return the result of the function call
+    return wrapper                                  # Return the wrapper function
+
+@logging_decorator
+def a_function(*args):
+    return sum(args)                                # Return the sum of all arguments
+
+a_function(1,2,3)                                   # Call the decorated function with arguments
