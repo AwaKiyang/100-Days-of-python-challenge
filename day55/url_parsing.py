@@ -1,0 +1,33 @@
+# let's import the flask
+from flask import Flask
+import os # importing operating system module
+
+app = Flask(__name__)
+
+@app.route('/') # this decorator create the home route
+def home():
+    return '<h1>Welcome freiends</h1>'
+
+@app.route("/bye")
+def bye():
+    return "<h1>Bye!</h1>"
+
+@app.route('/username/<name>')
+def name(name):
+    return f'hello {name}!'
+
+@app.route('/username/<name>/1')
+def salut(name):
+    return f'hello {name} nice to meet you'
+
+@app.route('/username/<name>/<int:number>')
+def greeting(name,number):
+    return f'hello {name} you are {number} year old'
+
+
+
+if __name__ == '__main__':
+    # for deployment we use the environ
+    # to make it work for both production and development
+    port = int(os.environ.get("PORT", 5000))
+    app.run(debug=True, host='0.0.0.0', port=port) 
