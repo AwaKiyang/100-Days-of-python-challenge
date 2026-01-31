@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog_post</title>
+</head>
+<body>
+    <!-- Loop through each post in blog_post and display its content -->
+    {% for post in blog_post: %}
+        <h1 style="background-color: antiquewhite;">{{post['title']}}</h1>
+        <h2>{{post['subtitle']}}</h2>
+        <h2>{{post['body']}}</h2>
+    {%endfor%}    
+
+    <!-- Loop again to check for post with id 2 and display it differently -->
+    {% for post in blog_post: %}
+        {% if post['id'] == 2 %}
+            <!-- Highlight the post with id 2 -->
+            <h1 style="background-color: rgb(98, 17, 174);">{{post['title']}}</h1>
+            <h2>{{post['subtitle']}}</h2>
+            <h2>{{post['body']}}</h2>
+        {% else %}
+            <!-- Message for posts that do not have id 2 -->
+            <p>no post with id two</p>
+        {% endif %}
+    {%endfor%}    
+</body>
+</html>
