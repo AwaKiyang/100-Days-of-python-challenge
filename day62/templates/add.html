@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+<!--Don't forget your import here-->
+{% block title %}Add A New Cafe{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12 col-md-8">
+
+      <h1>Add a new cafe into the database</h1>
+
+      <form method="POST" action="{{ url_for('add_info') }} " novalidate>
+        {{ form.csrf_token }}
+      
+        <p class="mb-3">
+          {{ form.cafe.label(class="form-label") }} <br> {{ form.cafe(size=30,class="form-control")}}
+          {% for err in form.cafe.errors %}
+					    <span class="form-text" style="color: red;">{{ err }}</span>
+				  {% endfor %}
+        </p>
+        <p class="mb-3">
+          {{ form.location.label(class="form-label") }} <br> {{ form.location(size=30,class="form-control")}}
+          {% for err in form.cafe.errors %}
+					    <span class="form-text" style="color: red;">{{ err }}</span>
+				  {% endfor %}
+        </p>
+        <p class="mb-3">
+          {{ form.openingtime.label(class="form-label") }} <br> {{form.openingtime(size=30,class="form-control")}}
+          {% for err in form.cafe.errors %}
+					    <span class="form-text" style="color: red;">{{ err }}</span>
+				  {% endfor %}
+        </p>
+        <p class="mb-3">
+          {{ form.closing_time.label(class="form-label") }} <br> {{form.closing_time(size=30,class="form-control")}}
+          {% for err in form.cafe.errors %}
+					    <span class="form-text" style="color: red;">{{ err }}</span>
+				  {% endfor %}
+        </p>
+
+        <p class="mb-3">{{ form.coffee.label(class="form-label") }} <br> {{ form.coffee(class="form-control")}}</p>
+        <p class="mb-3">{{ form.wifi.label(class="form-label") }} <br> {{ form.wifi(class="form-control")}}</p>
+        <p class="mb-3">{{ form.socket.label(class="form-label") }} <br> {{ form.socket(class="form-control")}}</p>
+      
+        {{ form.submit(class="btn btn-warning btn-lg") }}
+        <a class="btn btn-primary btn-lg" href="{{ url_for('cafes') }}" role="button">See cafes!</a>
+      </form>
+	  
+    </div>
+  </div>
+</div>
+
+{% endblock %}

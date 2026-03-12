@@ -118,9 +118,13 @@
         </div>
 
         <section id="hero">
-            <h1>CONTACT ME</h1>
+            {% if msg_sent: %}
+            <h1>Successfully sent your message</h1>
+            {% else: %}
+            <h1>Contact Me</h1>
+            {% endif %}
             <p>
-                I am Bloger
+                Have questions? I have answers.
             </p>
 
         </section>
@@ -133,7 +137,7 @@
                 <p>Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et
                     dolore magna aliqua consectetur adipiscing.</p>
     
-                <form action="/contact" method="POST">
+                <form action="{{ url_for('send_info') }}" method="POST">
                     <div class="row">
                         <div class="col-md-6 form-group">
                             <input type="text" name="name" class="form-control" id="name" placeholder="Your Name"
