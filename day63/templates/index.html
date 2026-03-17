@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}home{% endblock %}
+
+{% block content %} 
+  <h1>My Library</h1>
+  <ul>
+    {% for book in library %}
+      <li><a href="{{ url_for('delete', del_id=book.id) }}">Delete</a>{{book.title}} by {{book.author}}, rated ({{book.rating}}) <a href="{{ url_for('update', id=book.id) }}">Update rating</a></li>
+    {% endfor %}
+  </ul>
+
+  <a class="btn btn-primary btn-md" href="{{ url_for('add') }}" role="button">Add New Book</a>
+{% endblock %}

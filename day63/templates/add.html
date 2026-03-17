@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}add info{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12 col-md-8">
+
+      <h1>Add a new book to the database</h1>
+
+      <form action="{{ url_for('add') }}" method="POST" >
+        <p class="mb-3">
+          <label class="form-label">Book Name</label><br>
+          <input type="text" name="Book_name" class="form-control" id="Book_name" placeholder="Book name" required="">
+        </p>
+
+        <p> <label class="form-label">Book Author</label><br>
+          <input type="text" name="Book_Author" class="form-control" id="Book_Author" placeholder="Book Author"
+            required="">
+        </p>
+        <p> <label class="form-label">Rating</label><br>
+          <input type="text" name="rating" class="form-control" id="rating" placeholder="Rating" required="">
+        </p>
+
+        <button class="form-submit btn btn-primary btn-lg" type="submit">Add Book</button>
+      </form>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

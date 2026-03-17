@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %} update {% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12 col-md-8">
+
+      <h1>Update rating</h1>
+
+      <form action="{{ url_for('update', id=book.id ) }}" method="POST" >
+
+        <p class="mb-3">
+          <label class="form-label">New rating</label><br>
+          <input type="text" name="New_rating" class="form-control" id="New_rating" placeholder="New rating" required="">
+        </p>
+
+        <button class="form-submit btn btn-primary btn-lg" type="submit">Update rating</button>
+      </form>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
