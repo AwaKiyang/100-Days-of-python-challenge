@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Movie{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12 col-md-8">
+
+        <h1 class="heading">Add a Movie</h1>
+
+        <form method="POST" action="{{ url_for('add_movie')}}" novalidate>
+        {{ form.csrf_token }}
+
+        <p class="mb-3">
+          {{ form.title.label(class="form-label") }} <br> {{ form.title(size=30,class="form-control")}}
+          {% for err in form.title.errors %}
+			<span class="form-text" style="color: red;">{{ err }}</span>
+		  {% endfor %}
+        </p>
+
+        <p>
+            {{form.year.label(class="form-label") }} <br> {{ form.year(size=30, class="form-control") }}
+            {% for err in form.year.errors %}
+                <span class="'form-text" style="color: red;">{{ err }}</span>
+            {% endfor %}
+        </p>
+
+        <p>
+            {{form.description.label(class="form-label") }} <br> {{ form.description(size=30, class="form-control") }}
+            {% for err in form.description.errors %}
+                <span class="'form-text" style="color: red;">{{ err }}</span>
+            {% endfor %}
+        </p>  
+
+        <p>
+            {{form.rating.label(class="form-label") }} <br> {{ form.rating(size=30, class="form-control") }}
+            {% for err in form.rating.errors %}
+                <span class="'form-text" style="color: red;">{{ err }}</span>
+            {% endfor %}
+        </p>
+
+        <p>
+            {{form.ranking.label(class="form-label") }} <br> {{ form.ranking(size=30, class="form-control") }}
+            {% for err in form.ranking.errors %}
+                <span class="'form-text" style="color: red;">{{ err }}</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{form.review.label(class="form-label") }} <br> {{ form.review(size=30, class="form-control") }}
+            {% for err in form.review.errors %}
+                <span class="'form-text" style="color: red;">{{ err }}</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{form.img.label(class="form-label") }} <br> {{ form.img(size=30, class="form-control") }}
+            {% for err in form.img.errors %}
+                <span class="'form-text" style="color: red;">{{ err }}</span>
+            {% endfor %}
+        </p>
+        <a class="btn btn-primary btn-lg" href="{{ url_for('home') }}" role="button">See Movies!</a>
+        {{ form.submit(class="btn btn-warning btn-lg") }}
+
+        </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

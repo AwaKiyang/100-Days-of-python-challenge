@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import Integer, String, Float
 import os
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError  #for flask error handling
 
 # Initialize Flask application
 app = Flask(__name__)
@@ -15,11 +15,9 @@ class Base(DeclarativeBase):
 # Initialize SQLAlchemy with the custom Base class
 db = SQLAlchemy(model_class=Base)
 
-# Configure SQLite database path
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///new-books-collection.db"
 
-# Initialize the Flask app with SQLAlchemy extension
-db.init_app(app)
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///new-books-collection.db"  # Configure SQLite database path
+db.init_app(app)   # Initialize the Flask app with SQLAlchemy extension
 
 # Define Books model with columns: id, title, author, and rating
 class Books(db.Model):
@@ -33,14 +31,14 @@ with app.app_context():
     db.create_all()
 
 # Route to display all books sorted by title
-@app.route('/')
+@app.route('/')  #READ
 def home():
     result = db.session.execute(db.select(Books).order_by(Books.title))  # Query all books ordered by title
     all_books = result.scalars().all()  # Extract all book objects
     return render_template('index.html', library=all_books)  # Render template with books
 
 # Route to add a new book (GET shows form, POST adds book to database)
-@app.route("/add", methods=['GET', 'POST'])
+@app.route("/add", methods=['GET', 'POST'])   #CREATE
 def add():
     if request.method == "POST":
         try:
@@ -60,7 +58,7 @@ def add():
     return render_template('add.html')  # Show add book form for GET request
 
 # Route to delete a book by ID
-@app.route('/delete/<del_id>')
+@app.route('/delete/<del_id>')  #DELETE
 def delete(del_id):
     book_id = int(del_id)  # Convert string ID to integer
     # Query book by ID
@@ -70,7 +68,7 @@ def delete(del_id):
     return redirect(url_for('home'))  # Redirect to home page
 
 # Route to update a book's rating by ID
-@app.route('/update/<id>', methods=['GET', 'POST'])
+@app.route('/update/<id>', methods=['GET', 'POST'])  #UPDATE
 def update(id):
     book_id = int(id)  # Convert string ID to integer
     book_to_update = db.get_or_404(Books, book_id)  # Get book or return 404 error

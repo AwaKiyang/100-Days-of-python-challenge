@@ -5,7 +5,7 @@
   <h1>My Library</h1>
   <ul>
     {% for book in library %}
-      <li><a href="{{ url_for('delete', del_id=book.id) }}">Delete</a>{{book.title}} by {{book.author}}, rated ({{book.rating}}) <a href="{{ url_for('update', id=book.id) }}">Update rating</a></li>
+      <li><a href="{{ url_for('delete', del_id=book.id) }}">Delete</a>{{book.title}} by <b><i>{{book.author}}</i></b>, rated ({{book.rating}}) <a href="{{ url_for('update', id=book.id) }}">Update rating</a></li>
     {% endfor %}
   </ul>
 
