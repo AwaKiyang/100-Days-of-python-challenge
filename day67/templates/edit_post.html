@@ -1,0 +1,5 @@
+{% extends 'add_post.html' %}
+
+{% block title %}Edit_post{% endblock%}
+
+{% block form %} <form method="POST" action="{{ url_for('edit_post' , id=post.id)}} " novalidate>{% endblock %}

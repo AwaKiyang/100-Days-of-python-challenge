@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="../static/style.css">
+    <title>{% block title %} add_post {% endblock %}</title>
+</head>
+<style>
+    header{
+        background-image: url('https://images.unsplash.com/photo-1543525238-54e3d131f7ca?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGZhc3Rpbmd8ZW58MHx8MHx8fDA%3D');
+    }
+
+</style>
+
+<body>
+    <header id="about">
+        <div class="navbar">
+            <div class="logo"><a href="">Awapk</a></div>
+            <ul class="links">
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('about') }}">About</a></li>
+                <li><a href="{{ url_for('contact') }}">Contact</a></li>
+            </ul>
+            <button class="toggle_btn">
+                <svg xmlns="http://www.w3.org/2000/svg"  width="30" height="30" fill="currentColor" class="bi bi-list"
+                    viewBox="0 0 16 16">
+                    <path fill-rule="evenodd"
+                        d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
+                </svg>
+            </button>
+        </div>
+
+        <div class="dropdown_menu">
+                <li><a href="{{ url_for('home') }}">Home</a></li>
+                <li><a href="{{ url_for('about') }}">About</a></li>
+                <li><a href="{{ url_for('contact') }}">Contact</a></li>
+        </div>
+
+        <section id="hero">
+            <h1>Add Blog</h1>
+            <p>
+                I am Bloger
+            </p>
+
+        </section>
+    </header>
+
+    <main>
+        <div class="container">
+        <div class="row">
+        <div class="col-sm-12 col-md-8">
+
+            <h1>Add a new blog into the database</h1>
+
+            {% block form %}<form method="POST" action="{{ url_for('add_post') }} " novalidate>{% endblock %}
+                {{ form.csrf_token }}
+            
+                <p class="mb-3">
+                {{ form.title.label(class="form-label") }} <br> {{ form.title(size=30,class="form-control")}}
+                {% for err in form.title.errors %}
+                                <span class="form-text" style="color: red;">{{ err }}</span>
+                        {% endfor %}
+                </p>
+                <p class="mb-3">
+                {{ form.subtitle.label(class="form-label") }} <br> {{ form.subtitle(size=30,class="form-control")}}
+                {% for err in form.subtitle.errors %}
+                                <span class="form-text" style="color: red;">{{ err }}</span>
+                        {% endfor %}
+                </p>
+                <p class="mb-3">
+                {{ form.author.label(class="form-label") }} <br> {{form.author(size=30,class="form-control")}}
+                {% for err in form.author.errors %}
+                                <span class="form-text" style="color: red;">{{ err }}</span>
+                        {% endfor %}
+                </p>
+                <p class="mb-3">
+                {{ form.img_url.label(class="form-label") }} <br> {{form.img_url(size=30,class="form-control")}}
+                {% for err in form.img_url.errors %}
+                                <span class="form-text" style="color: red;">{{ err }}</span>
+                        {% endfor %}
+                </p>
+                <p class="mb-3">
+                {{ form.content.label(class="form-label") }} <br> {{form.content(size=30,class="form-control")}}
+                {% for err in form.content.errors %}
+                                <span class="form-text" style="color: red;">{{ err }}</span>
+                        {% endfor %}
+                </p>
+            
+                {{ form.submit(class="btn btn-warning btn-lg") }}
+            </form>
+            {{ ckeditor.load() }}
+            {{ ckeditor.config(name='body') }}
+        </div>
+        </div>
+        </div>
+    </main>
+
+
+    {% include "footer.html" %}
+    <script>
+        const toggleBtn = document.querySelector('.toggle_btn')
+        const toggleBtnIcon = document.querySelector('.toggle_btn svg')
+        const dropDownMenu = document.querySelector('.dropdown_menu')
+
+        toggleBtn.onclick = function() {
+            dropDownMenu.classList.toggle('open')
+            const isOpen = dropDownMenu.classList.contains('open')
+
+            toggleBtnIcon.classList = isOpen
+                ? 'bi bi-x'
+                : 'bi bi-list'
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm # Import Flask-WTF for CSRF protection on forms
-from wtforms import StringField, SubmitField, URLField, TimeField, SelectField, IntegerField, DecimalField # Import form field types
-from wtforms.validators import DataRequired, Length, NumberRange, URL # Import validators for form field validation
+from wtforms import StringField, SubmitField, URLField, IntegerField, DecimalField # Import form field types
+from wtforms.validators import DataRequired, NumberRange, URL # Import validators for form field validation
 
 """####################____________FORM_CLASS_______________#############################"""
 class Movieform(FlaskForm):
