@@ -24,7 +24,7 @@ Usage:
 
 #today we are going to design a ciphering algorithim based on ceaser cipher
 import string    #importing string module to obtain a list of characters
-letters_list = list(string.ascii_letters + string.digits + ' ' + string.punctuation)  # letter_list a list containing uppercase,lowercase,space and gigits
+letters_list = list(string.ascii_letters + string.digits + ' ' + string.punctuation) 
 letter_list_size = len(letters_list)  #lenght of letters_list size
 
 def encrypt():   #encrypt function()
