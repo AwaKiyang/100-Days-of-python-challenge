@@ -2,7 +2,7 @@ from datetime import date  # Import date class for handling dates
 from flask import Flask, abort, render_template, redirect, url_for, flash  # Import Flask components for web app
 from flask_bootstrap import Bootstrap5  # Import Bootstrap for styling
 from flask_ckeditor import CKEditor  # Import CKEditor for rich text editing
-#from flask_gravatar import Gravatar  # Commented out: Import for Gravatar (user avatars)
+from flask_gravatar import Gravatar  # Commented out: Import for Gravatar (user avatars)
 from flask_login import UserMixin, login_user, LoginManager, current_user, logout_user, login_required  # Import Flask-Login for user authentication
 from flask_sqlalchemy import SQLAlchemy  # Import SQLAlchemy for database ORM
 from sqlalchemy.orm import relationship, DeclarativeBase, Mapped, mapped_column  # Import SQLAlchemy ORM components
@@ -11,7 +11,7 @@ from functools import wraps  # Import wraps for decorators
 from werkzeug.security import generate_password_hash, check_password_hash  # Import for password hashing
 import os  # Import os for environment variables
 # Import your forms from the forms.py
-from forms import CreatePostForm, Createregisterform, CreateLoginForm  # Import custom forms
+from forms import CreatePostForm, Createregisterform, CreateLoginForm, CreatecommentForm  # Import custom forms
 # Add additional imports
 
 app = Flask(__name__)  # Create Flask application instance
@@ -29,6 +29,14 @@ login_manager.init_app(app)  # Bind login manager to Flask app
 def load_user(user_id):
     return db.get_or_404(Users, user_id)  # Load user by ID from database
 
+gravatar = Gravatar(app,
+                    size=100,
+                    rating='g',
+                    default='retro',
+                    force_default=False,
+                    force_lower=False,
+                    use_ssl=False,
+                    base_url=None)
 
 # CREATE DATABASE
 class Base(DeclarativeBase):  # Define base class for SQLAlchemy models
@@ -48,21 +56,33 @@ class BlogPost(db.Model):  # Define BlogPost model
     body: Mapped[str] = mapped_column(Text, nullable=False)  # Post body text
     img_url: Mapped[str] = mapped_column(String(250), nullable=False)  # Image URL
     author_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"), nullable=False)  # Foreign key to Users
+    comments = db.relationship("Comments", backref="parent_post", lazy=True)
 
 
 # TODO: Create a User table for all your registered users. 
-class Users(UserMixin, db.Model):  # Define Users model inheriting from UserMixin
+class Users(UserMixin, db.Model):
+    __tablename__ = "users"  # Define Users model inheriting from UserMixin
     id: Mapped[int] = mapped_column(Integer, primary_key=True)  # Primary key ID
     email: Mapped[str]= mapped_column(String(100), unique=True, nullable=False)  # Unique email
     password: Mapped[str] = mapped_column(String(1000), nullable=False)  # Hashed password
     name: Mapped[str] = mapped_column(String(250), nullable=False)  # User name
     posts = db.relationship("BlogPost", backref="author", lazy=True)  # Relationship to BlogPost
+    comments = db.relationship("Comments", backref="comment_author", lazy=True )
+
+#
+class Comments(db.Model):
+    __tablename__ = 'comments' 
+    id : Mapped[int]= mapped_column(Integer, primary_key=True)
+    comment: Mapped[str] = mapped_column(Text, nullable=False)
+    author_id: Mapped[int] = mapped_column(Integer, ForeignKey("users.id"), nullable=False)
+    post_id: Mapped[int] = mapped_column(Integer, ForeignKey('blog_posts.id'), nullable=False)
+#
 
 
 
 with app.app_context():  # Create database tables within app context
-    db.create_all()
-
+    db.create_all() 
+    
 
 #Create admin-only decorator
 def admin_only(f):  # Decorator to restrict access to admin (user ID 1)
@@ -143,10 +163,23 @@ def get_all_posts():
 
 
 # TODO: Allow logged-in users to comment on posts
-@app.route("/post/<int:post_id>")  # Route to show individual post
+@app.route("/post/<int:post_id>", methods=['GET','POST'])  # Route to show individual post
 def show_post(post_id):
+    comment_form = CreatecommentForm()
     requested_post = db.get_or_404(BlogPost, post_id)  # Get post by ID or 404
-    return render_template("post.html", post=requested_post, islogged_in = current_user.is_authenticated, user = current_user)  # Render post template
+    if comment_form.validate_on_submit():
+        if current_user.is_authenticated:
+            new_comment = Comments(
+                comment = comment_form.comment.data,
+                comment_author = current_user,
+                parent_post = requested_post
+            )
+            db.session.add(new_comment)
+            db.session.commit()
+        else:
+            flash('login before giving comments')
+            return redirect(url_for('login'))
+    return render_template("post.html", post=requested_post, islogged_in = current_user.is_authenticated, user = current_user, form=comment_form)  # Render post template
 
 
 # TODO: Use a decorator so only an admin user can create a new post
@@ -201,11 +234,18 @@ def delete_post(post_id):
     db.session.commit()  # Commit deletion
     return redirect(url_for('get_all_posts'))  # Redirect to home
 
+@app.route('/delete_comment/<int:comment_id>')
+def delete_comment(comment_id):
+    comment = db.get_or_404(Comments, comment_id)
+    db.session.delete(comment)
+    db.session.commit()
+    return redirect(url_for('get_all_post'))
+
 
 @app.route("/about")  # Route for about page
 def about():
-    user = db.get_or_404(Users, current_user.id)  # Get current user
-    return render_template("about.html", islogged_in = current_user.is_authenticated, waar = user.posts)  # Render about template
+ # Get current user
+    return render_template("about.html", islogged_in = current_user.is_authenticated)  # Render about template
 
 
 @app.route("/contact")  # Route for contact page

@@ -1,3 +1,4 @@
+{% from "bootstrap5/form.html" import render_form %}
 {% include "header.html" %}
 
 <!-- Page Header-->
@@ -40,18 +41,29 @@
         <!-- TODO: Add a CKEditor for commenting below -->
         <div class="comment">
           <!-- TODO: Show all the comments on a post -->
+          
           <ul class="commentList">
+            <p><strong style="color: aquamarine;">Comments</strong></p>
+            {% for text in post.comments %}
             <li>
               <div class="commenterImage">
-                <img src="../static/assets/img/default-profile.jpg" />
+                <img src="{{ text.comment_author.email | gravatar }}" alt="commenterImage">
               </div>
               <div class="commentText">
-                <p>Some comment</p>
-                <span class="date sub-text">comment author name</span>
+                <p>                
+                  {{text.comment | safe}}           
+                  {% if user.id == 1: %}
+                      <a href="{{url_for('delete_comment', comment_id=text.id) }}">✘</a>
+                  {% endif %}
+                </p>
+                <span class="date sub-text">{{ text.comment_author.name}}</span>  
               </div>
             </li>
+            {% endfor %}
           </ul>
         </div>
+        {{ ckeditor.load() }} {{ ckeditor.config(name='body') }} 
+        {{ render_form(form, novalidate=True, button_map={"submit": "primary"}) }}
       </div>
     </div>
   </div>
